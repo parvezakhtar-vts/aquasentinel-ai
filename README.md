@@ -9,28 +9,40 @@ It works right away on your computer with pretend ("mock") samples, so you do
 
 ---
 
-## ▶️ How to run it (start here)
+## ▶️ Easiest way on Windows (no Python needed)
+
+Your computer does **not** need Python or anything installed first — the setup
+file does all of it for you.
+
+1. **Once, the night before** (needs internet, ~5–15 min):
+   double-click **`setup.bat`** and wait until it says **“Setup complete”**.
+2. **On demo day:** double-click **`start.bat`** — the dashboard opens in your
+   web browser automatically. 🎉 Keep that black window open during the demo.
+
+**Backup plan:** if the browser version ever acts up at the table, double-click
+**`start-terminal.bat`** for a plain-text version that always works.
+
+See **`docs/WINDOWS_SETUP.md`** for step-by-step pictures-in-words.
+
+---
+
+## ▶️ If you already have Python (Mac / Linux / Windows)
 
 Open a terminal **in this folder** and type:
 
-**Mac / Linux**
 ```bash
-python3 run.py
+python3 run.py            # plain terminal version (Windows: python run.py)
 ```
-
-**Windows**
-```bat
-python run.py
-```
-
-That's it! It makes some example water samples and prints a result card for
-each one. 🎉
 
 Want the pretty screen version?
 ```bash
 pip install streamlit
 streamlit run dashboard.py
 ```
+
+> **Building on this, or an AI coding agent helping integrate the pieces?**
+> Read **`AGENTS.md`** — it has the exact data contract, ports, sensor formats,
+> model-swap hooks, and the known issues to fix.
 
 ---
 
