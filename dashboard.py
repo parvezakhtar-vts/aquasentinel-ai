@@ -53,9 +53,114 @@ def render_sample(r: dict):
     st.divider()
 
 
+ORGANISMS_DOC = [
+    ("Clean water", "None", 0, "Clear field, few particles"),
+    ("Algae", "Algae", 1, "Large green clusters"),
+    ("Cyanobacteria", "Blue-green bacteria", 2, "Blue-green filaments / chains"),
+    ("Giardia lamblia", "Protozoa", 2, "Tear-drop / oval cysts"),
+    ("Cryptosporidium", "Protozoa", 2, "Small round oocysts"),
+    ("E. coli", "Bacteria", 2, "Many small dark rods"),
+    ("Naegleria fowleri", "Amoeba", 3, "Few large irregular bodies"),
+]
+
+PIPELINE_STEPS = [
+    ("Capture the inputs",
+     "Every sample is one microscope image plus two sensor readings — **pH** and "
+     "**temperature**. They come from a mock pendrive (the demo default), manual entry, or "
+     "live hardware (Arduino over USB, or a NodeMCU over Wi-Fi)."),
+    ("Classify the organism (the image model)",
+     "The classifier reads actual pixels — not a lookup table. It reduces each image to "
+     "**8 numeric features** (mean colour, green dominance for chlorophyll, texture, edge "
+     "density, and dark-pixel fraction at two scales to tell tiny rods from large blobs), then "
+     "picks the nearest learned prototype per organism. A softmax over the distances gives the "
+     "confidence and per-class probabilities."),
+    ("Fuse image + sensors into a risk verdict",
+     "A deliberately transparent rule combines the three signals so every verdict can be "
+     "explained line by line. The image says *which* organism; the sensors say *how dangerous* "
+     "the conditions are."),
+    ("Assemble one result object",
+     "The classification, organism metadata, raw pH/temperature, and the risk verdict are merged "
+     "into a single result object. This one object is the contract every front-end renders — which "
+     "is why the terminal, this dashboard, and the web app always agree."),
+    ("Show it",
+     "The result is rendered as the cards on the Dashboard: organism, confidence, pH, temperature, "
+     "the risk badge, a recommendation, and the exact reasons behind the verdict."),
+]
+
+
+def render_docs():
+    st.header("How AquaSentinel Works")
+    st.write(
+        "AquaSentinel screens a water sample for microbial contamination in seconds. Give it a "
+        "microscope image of a water drop plus the water's pH and temperature, and it identifies "
+        "the microorganism and reports a contamination risk — an early warning, not a lab replacement."
+    )
+
+    st.subheader("The pipeline at a glance")
+    nodes = [
+        ("🔬 Microscope image", "the drop of water"),
+        ("🧠 Classifier", "which organism + confidence"),
+        ("⚖️ Fusion", "+ pH & temperature → risk"),
+        ("📊 Dashboard", "verdict + recommendation"),
+    ]
+    cols = st.columns(len(nodes))
+    for col, (title, sub) in zip(cols, nodes):
+        with col:
+            with st.container(border=True):
+                st.markdown(f"**{title}**")
+                st.caption(sub)
+
+    st.subheader("Step by step")
+    for i, (title, body) in enumerate(PIPELINE_STEPS, start=1):
+        with st.container(border=True):
+            st.markdown(f"**{i}. {title}**")
+            st.markdown(body)
+            if title.startswith("Classify"):
+                st.markdown("It chooses from seven categories:")
+                st.dataframe(
+                    pd.DataFrame([
+                        {"Organism": o, "Kind": k, "Danger (0-3)": d, "Look": look}
+                        for o, k, d, look in ORGANISMS_DOC
+                    ]),
+                    hide_index=True, width="stretch",
+                )
+            if title.startswith("Fuse"):
+                st.code(
+                    "risk_score = 2 * organism_danger      (danger 0=clean ... 3=severe)\n"
+                    "           + 1  if pH outside 6.5-8.5\n"
+                    "           + 1  if temperature > 30 C\n\n"
+                    "score <= 1  ->  LOW        2-3  ->  MODERATE        >= 4  ->  HIGH",
+                    language="text",
+                )
+
+    st.subheader("What's real and what's simulated")
+    st.markdown(
+        "- **Real:** the classifier reads real pixels and makes a genuine prediction; the "
+        "pH/temperature fusion logic is real.\n"
+        "- **Simulated for the demo:** the microscope images and sensor readings are generated "
+        "stand-ins, so the demo runs anywhere without hardware.\n"
+        "- **Not claimed:** species-level certainty or a replacement for a laboratory. AquaSentinel "
+        "is a screening and early-warning tool."
+    )
+    st.warning(
+        "**Honest caveat.** The demo classifier is validated on images from the same generator it "
+        "learned from, so the \"matches labels\" count reflects self-consistency on synthetic data "
+        "— not real-world accuracy. The system is built so a real image dataset or a fine-tuned CNN "
+        "drops in without changing anything downstream."
+    )
+
+
 def main():
     st.title("💧 AquaSentinel AI")
     st.caption("AI-assisted water biosurveillance — microscope image + pH + temperature → contamination risk")
+
+    with st.sidebar:
+        page = st.radio("Page", ["Dashboard", "How it works"])
+        st.markdown("---")
+
+    if page == "How it works":
+        render_docs()
+        return
 
     with st.sidebar:
         st.header("Input")
