@@ -1,0 +1,9 @@
+# Generated demo data and model cache
+data/
+aqua/prototypes.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

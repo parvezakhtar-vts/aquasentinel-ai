@@ -1,0 +1,93 @@
+# 💧 AquaSentinel AI
+
+**A smart water checker.** You give it a microscope photo of a water drop plus
+the water's **pH** and **temperature**, and it tells you what tiny organism it
+sees and whether the water looks **safe, risky, or unsafe** — in seconds.
+
+It works right away on your computer with pretend ("mock") samples, so you do
+**not** need any hardware or internet to try it.
+
+---
+
+## ▶️ How to run it (start here)
+
+Open a terminal **in this folder** and type:
+
+**Mac / Linux**
+```bash
+python3 run.py
+```
+
+**Windows**
+```bat
+python run.py
+```
+
+That's it! It makes some example water samples and prints a result card for
+each one. 🎉
+
+Want the pretty screen version?
+```bash
+pip install streamlit
+streamlit run dashboard.py
+```
+
+---
+
+## 🧠 What the folders mean
+
+```
+aquasentinel/
+│
+├─ run.py            ⭐ START HERE — the terminal demo
+├─ dashboard.py         the pretty screen version (needs: pip install streamlit)
+├─ requirements.txt     the list of things to install (optional extras)
+│
+├─ aqua/             🧠 the "brain" — all the AI code lives here
+│   ├─ config.py         the list of organisms + safety rules (read this first!)
+│   ├─ mock_data.py      makes the pretend water samples
+│   ├─ classifier.py     looks at the photo and guesses the organism
+│   ├─ fusion.py         mixes photo + pH + temperature into a risk level
+│   ├─ pipeline.py       connects all the steps together
+│   └─ serial_reader.py  (optional) reads a real Arduino / NodeMCU
+│
+├─ arduino/          🔌 the hardware code (Arduino + NodeMCU)
+│   ├─ ph_sensor_uno/     Arduino Uno: reads pH + temperature
+│   └─ nodemcu_wifi/      NodeMCU: sends the reading over Wi-Fi
+│
+├─ docs/             📄 the write-up for your project / judges
+│   ├─ PROJECT_STATEMENT.md   how everything works (with diagrams)
+│   ├─ DEMO_SCRIPT.md         what to say and click on demo day
+│   └─ UPGRADE_REAL_MODEL.md  how to add a bigger AI model later
+│
+└─ data/            (created automatically — the example samples)
+```
+
+---
+
+## 🔬 Try other things
+
+**One photo, with your own pH and temperature numbers:**
+```bash
+python3 run.py --image data/pendrive/images/sample_001.png --ph 5.9 --temp 32
+```
+
+**Use a real Arduino or NodeMCU (only if you have one):**
+```bash
+pip install pyserial
+python3 run.py --image data/pendrive/images/sample_001.png --serial /dev/cu.usbmodem1101
+python3 run.py --image data/pendrive/images/sample_001.png --nodemcu http://192.168.1.50/ph
+```
+
+---
+
+## ⚖️ What's real and what's pretend (say this to judges)
+
+- **Pretend:** the microscope photos and sensor numbers are *made up* to stand in
+  for the real camera and sensors, so the demo always works.
+- **Real:** the AI really looks at the photo's colours and shapes to decide, and
+  the safety rules (pH + temperature) are real.
+- **Honest limit:** it gives an early **warning**, it does **not** replace a real
+  laboratory test.
+
+Read `docs/DEMO_SCRIPT.md` for your demo-day plan and answers to judge questions.

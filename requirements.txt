@@ -1,0 +1,10 @@
+# Core — needed for the CLI demo (usually already installed)
+numpy>=1.24
+pandas>=2.0
+pillow>=9.0
+
+# Optional — pretty dashboard (skip if you only use run_cli.py)
+streamlit>=1.30
+
+# Optional — live pH straight from the Arduino over USB
+pyserial>=3.5
