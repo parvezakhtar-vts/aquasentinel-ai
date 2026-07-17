@@ -65,6 +65,18 @@ aquasentinel/
 
 ---
 
+## 🖼️ Get real microscope images (optional)
+
+Download real, freely-licensed microscope photos of each organism from
+Wikimedia Commons (saved to `data/real_samples/<organism>/`, with credits in
+`ATTRIBUTIONS.md`):
+```bash
+python3 download_images.py            # ~6 images per organism
+python3 download_images.py --per 10   # more
+```
+These are for testing the classifier and for fine-tuning a real CNN later
+(see `docs/UPGRADE_REAL_MODEL.md`). They are **not** committed to the repo.
+
 ## 🔬 Try other things
 
 **One photo, with your own pH and temperature numbers:**
