@@ -56,6 +56,7 @@ aquasentinel/
 │   └─ nodemcu_wifi/      NodeMCU: sends the reading over Wi-Fi
 │
 ├─ docs/             📄 the write-up for your project / judges
+│   ├─ OVERVIEW.md           ⭐ read this to understand the project + pipeline
 │   ├─ PROJECT_STATEMENT.md   how everything works (with diagrams)
 │   ├─ DEMO_SCRIPT.md         what to say and click on demo day
 │   └─ UPGRADE_REAL_MODEL.md  how to add a bigger AI model later
